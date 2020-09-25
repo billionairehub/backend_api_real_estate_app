@@ -2,8 +2,8 @@
 return [
     'status_fail' => 'Lấy danh sách thất bại!',
     'status_pass' => 'Lấy danh sách thành công!',
-    'data_exist' => 'Thông tin tài khoản đã tồn tại!',
-    'data_not_exist' => 'Thông tin tài khoản không tồn tại!',
+    'data_exist' => 'Thông tin đã tồn tại!',
+    'data_not_exist' => 'Thông tin không tồn tại!',
     'add_success' => 'Thêm thành công!',
     'add_unsuccess' => 'Thêm không thành công!',
     'upate_success' => 'Cập nhật thành công!',

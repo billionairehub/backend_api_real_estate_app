@@ -164,49 +164,79 @@ class CreateAccountController extends Controller
             ];
         }
 
-        $listdata->username = $request->input('username');
-        $listdata->phone = $request->input('phone');
-        $listdata->email = $request->input('email'); 
-        $img = Hash::make($request->file('url_avata'));
-        $now = Carbon::now();
-        $photo_name = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
-        $path = $request->file('url_avata')->move('./image_avata', $photo_name);
-        $img_url = asset('/image_avata/'.$photo_name);
-        $listdata->url_avata = $img_url;
-
         $listdata->personal_infor = $request->input('personal_infor');
-
-        $img_cover = Hash::make($request->file('url_cover_image'));
-        $photo_name_cover = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
-        $path_cover = $request->file('url_cover_image')->move('./image_cover', $photo_name_cover);
-        $img_url_cover = asset('/image_cover/'.$photo_name_cover);
-        $listdata->url_cover_image = $img_url_cover;
-
         $listdata->id_token_faceboook = $request->input('id_token_faceboook'); 
         $listdata->id_token_google = $request->input('id_token_google'); 
         $listdata->birth_date = Carbon::parse($request->input('birth_date'))->format('Y.m.d'); 
         $listdata->passwords = Hash::make($request->passwords);
 
+        $lst = $request->all();
+        $result = [
+            'success' => false,
+            'code' => 205,
+            'message' => trans('message.data_exist'),
+            'data' => null
+        ];
+        $data = [];
         $album = new album;
+        if (array_key_exists('url_avata', $lst)){
+            $img = Hash::make($request->file('url_avata'));
+            $now = Carbon::now();
+            $photo_name = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
+            $path = $request->file('url_avata')->move('./image_avata', $photo_name);
+            $img_url = asset('/image_avata/'.$photo_name);
+            $listdata->url_avata = $img_url;
+            $album->album_avt = $img_url;
+        } else {
+            $album->album_avt = $listdata->url_avata;
+        }
+        if (array_key_exists('url_cover_image', $lst)){
+            $img_cover = Hash::make($request->file('url_cover_image'));
+            $now = Carbon::now();
+            $photo_name_cover = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
+            $path_cover = $request->file('url_cover_image')->move('./image_cover', $photo_name_cover);
+            $img_url_cover = asset('/image_cover/'.$photo_name_cover);
+            $listdata->url_cover_image = $img_url_cover;
+            $album->album_cover = $img_url_cover;
+        } else {
+            $album->album_cover = $listdata->url_cover_image;
+        }
         $album->id_account = $id;
-        $album->album_avt = $img_url;
-        $album->album_cover = $img_url_cover;
         $img = $album->save();
-        
+        if (array_key_exists('phone', $lst)) {
+            $data = account::where('phone', $request->input('phone'))->first();
+            if ($data) {
+                return $result;
+            }
+            $listdata->phone = $request->input('phone');
+        }
+        if (array_key_exists('username', $lst)) {
+            $data = account::where('username', $request->input('username'))->first();
+            if ($data) {
+                return $result;
+            }
+            $listdata->username = $request->input('username');
+        }
+        if (array_key_exists('email', $lst)) {
+            $data = account::where('email', $request->input('email'))->first();
+            if ($data) {
+                return $result;
+            }
+            $listdata->email = $request->input('email'); 
+        }
         $info = $listdata->save();
-        //printf($info);
         if($info != 1){
             $result = [
                   'success' => false,
                   'code' => 400,
-                  'message'=> trans('upate_unsuccess'),
+                  'message'=> trans('message.upate_unsuccess'),
                   'data' => null
             ];
         }else{
             $result = [
                   'success' => true,
                   'code' => 200,
-                  'message'=> tran('upate_success'),
+                  'message'=> trans('message.upate_success'),
                   'data' => $listdata,
                   'img' => $album
             ];
