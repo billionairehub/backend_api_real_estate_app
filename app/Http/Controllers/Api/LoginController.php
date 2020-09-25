@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\album;
 
 class LoginController extends Controller
 {
@@ -15,38 +16,56 @@ class LoginController extends Controller
             'username' => $req->input('username'),
             'password' => $req->input('passwords')
         ];
-        //dd($credentials);
-        #chứng thực
+        #authentication
         if (!$token = auth('api')->attempt($credentials))
         {
-            //dd($token);
-            # Sai Tên Đăng Nhập và Mật Khẩu
+            #Username or Passwords Fail
                 return response()->json([
                     'status' => false,
                     'code' => 403,
-                    'message' => 'Username or Password invalid.'
+                    'message' => trans('message.check_login')
                 ],403);
         }
 
-        #Trả về đăng nhập đúng
+        #Login success
         return response()->json([
             'status' => true,
             'code' => 200,
-            'message' => 'Login Success!.',
-            'token' => $token,
-            'type' => 'bearer',# có thể bỏ
-            'expires' => auth('api')->user()
+            'message' => trans('message.login_success'),
+            'token' => $token
         ],200);
     }
 
-    public function laythongtin()
+    public function getInfo()
     {
         return response()->json([
             'status' => true,
             'code' => 200,
-            'message' => 'Lấy thông tin thành công.',
-            'data' => auth('api')->user()
+            'message' => trans('message.get_info'),
+            'token_data' => auth('api')->user()
         ],200);
+    }
+
+    public function getAlbum($id)
+    {
+        $list = album::where('id_account',$id)->get();
+        if(count($list) == null){
+            $result = [
+                'success' => false,
+                  'code' => 404,
+                  'message' => trans('message.status_fail'),
+                  'data' => null
+            ];
+        }
+        else {
+            $result = [
+              'success' => true,
+              'code' => 200,
+              'message' => trans('message.status_pass'),
+              'data' => $list
+            ];
+        }
+        return response()->json($result);
     }
 
 }

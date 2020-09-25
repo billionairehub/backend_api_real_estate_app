@@ -22,12 +22,11 @@ class CreateAccountController extends Controller
     public function index()
     {
         $list = account::all();
-        //printf($list);
-        if(count($list) == null){
+        if(count($list)){
             $result = [
                 'success' => false,
                   'code' => 404,
-                  'message'=>'Lấy danh sách thất bại',
+                  'message'=> trans('message.status_fail'),
                   'data' => null
             ];
         }
@@ -35,7 +34,7 @@ class CreateAccountController extends Controller
             $result = [
               'success' => true,
               'code' => 200,
-              'message'=>'Lấy danh sách thành công',
+              'message'=> trans('message.status_pass'),
               'data' => $list
             ];
         }
@@ -50,44 +49,40 @@ class CreateAccountController extends Controller
      */
     public function store(Request $request)
     {
-        $list = account::where('username', '=', $request->input('username'))
-                               ->orWhere('phone', '=', $request->input('phone'))
-                               ->orWhere('email', '=', $request->input('email'))
-                               ->orWhere('id_token_faceboook', '=', $request->input('id_token_faceboook'))
-                               ->orWhere('id_token_google', '=', $request->input('id_token_google'))
-                               ->exists();
+        $list = account::where('username', $request->input('username'))
+                               ->orWhere('phone', $request->input('phone'))
+                               ->orWhere('email', $request->input('email'))
+                               ->first();
         if($list){
             $result = [
                 'success' => false,
-                  'code' => 205,
-                  'message'=>'Thông tin tài khoản đã tồn tại',
+                'code' => 205,
+                  'message'=> trans('message.data_exist'),
                   'data' => null
             ];
             return $result;
         }
-        
-        //printf($img, $img_url);
-        $DanhSach = new account;
-        $DanhSach->username = $request->input('username');
-        $DanhSach->phone = $request->input('phone');
-        $DanhSach->email = $request->input('email'); 
+        $listdata = new account;
+        $listdata->username = $request->input('username');
+        $listdata->phone = $request->input('phone');
+        $listdata->email = $request->input('email'); 
         $img = Hash::make($request->file('url_avata'));
         $now = Carbon::now();
         $photo_name = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
         $path = $request->file('url_avata')->move('./image_avata', $photo_name);
         $img_url = asset('/image_avata/'.$photo_name);
-        $DanhSach->url_avata = $img_url;
-        $DanhSach->personal_infor = $request->input('personal_infor');
+        $listdata->url_avata = $img_url;
+        $listdata->personal_infor = $request->input('personal_infor');
         $img_cover = Hash::make($request->file('url_cover_image'));
         $photo_name_cover = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
         $path_cover = $request->file('url_cover_image')->move('./image_cover', $photo_name_cover);
         $img_url_cover = asset('/image_cover/'.$photo_name_cover);
-        $DanhSach->url_cover_image = $img_url_cover;
+        $listdata->url_cover_image = $img_url_cover;
 
-        $DanhSach->id_token_faceboook = $request->input('id_token_faceboook'); 
-        $DanhSach->id_token_google = $request->input('id_token_google'); 
-        $DanhSach->birth_date = Carbon::parse($request->input('birth_date'))->format('Y.m.d'); 
-        $DanhSach->passwords = Hash::make($request->passwords);
+        $listdata->id_token_faceboook = $request->input('id_token_faceboook'); 
+        $listdata->id_token_google = $request->input('id_token_google'); 
+        $listdata->birth_date = Carbon::parse($request->input('birth_date'))->format('Y.m.d'); 
+        $listdata->passwords = Hash::make($request->passwords);
 
         $album = new album;
         $list = account::all();
@@ -96,21 +91,21 @@ class CreateAccountController extends Controller
         $album->album_cover = $img_url_cover;
 
         $album->save();
-        $info = $DanhSach->save();
+        $info = $listdata->save();
         //printf($info);
         if($info != 1){
             $result = [
                   'success' => false,
                   'code' => 400,
-                  'message'=>'Thêm tài khoản không thành công',
+                  'message'=> trans('message.add_unsuccess'),
                   'data' => null
             ];
         }else{
             $result = [
                   'success' => true,
                   'code' => 200,
-                  'message'=>'Thêm tài khoản thành công',
-                  'data' => $DanhSach,
+                  'message'=> trans('message.add_success'),
+                  'data' => $listdata,
                   'data_album' => $album
             ];
         }
@@ -131,20 +126,19 @@ class CreateAccountController extends Controller
     public function edit($id)
     {
         $list = account::find($id);
-        //printf($list);
         if($list == null){
             $result = [
-                'success' => false,
-                  'code' => 205,
-                  'message'=>'Lấy danh sách thất bại',
-                  'data' => null
+              'success' => false,
+              'code' => 205,
+              'message' => trans('message.status_fail'),
+              'data' => null
             ];
         }
         else {
             $result = [
               'success' => true,
               'code' => 200,
-              'message'=>'Lấy danh sách thành công',
+              'message' => trans('message.status_pass'),
               'data' => $list
             ];
         }
@@ -160,60 +154,60 @@ class CreateAccountController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $DanhSach = account::find($id);
-        if(!$DanhSach) {
+        $listdata = account::find($id);
+        if(!$listdata) {
           return $result = [
                   'success' => false,
                   'code' => 205,
-                  'message'=>'Tài khoản không tồn tại',
+                  'message' => trans('message.data_not_exist'),
                   'data' => null
             ];
         }
 
-        $DanhSach->username = $request->input('username');
-        $DanhSach->phone = $request->input('phone');
-        $DanhSach->email = $request->input('email'); 
+        $listdata->username = $request->input('username');
+        $listdata->phone = $request->input('phone');
+        $listdata->email = $request->input('email'); 
         $img = Hash::make($request->file('url_avata'));
         $now = Carbon::now();
         $photo_name = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
         $path = $request->file('url_avata')->move('./image_avata', $photo_name);
         $img_url = asset('/image_avata/'.$photo_name);
-        $DanhSach->url_avata = $img_url;
+        $listdata->url_avata = $img_url;
 
-        $DanhSach->personal_infor = $request->input('personal_infor');
+        $listdata->personal_infor = $request->input('personal_infor');
 
         $img_cover = Hash::make($request->file('url_cover_image'));
         $photo_name_cover = Carbon::parse($now)->format('Y_m_d_H_i_s').time().'.png';
         $path_cover = $request->file('url_cover_image')->move('./image_cover', $photo_name_cover);
         $img_url_cover = asset('/image_cover/'.$photo_name_cover);
-        $DanhSach->url_cover_image = $img_url_cover;
+        $listdata->url_cover_image = $img_url_cover;
 
-        $DanhSach->id_token_faceboook = $request->input('id_token_faceboook'); 
-        $DanhSach->id_token_google = $request->input('id_token_google'); 
-        $DanhSach->birth_date = Carbon::parse($request->input('birth_date'))->format('Y.m.d'); 
-        $DanhSach->passwords = Hash::make($request->passwords);
+        $listdata->id_token_faceboook = $request->input('id_token_faceboook'); 
+        $listdata->id_token_google = $request->input('id_token_google'); 
+        $listdata->birth_date = Carbon::parse($request->input('birth_date'))->format('Y.m.d'); 
+        $listdata->passwords = Hash::make($request->passwords);
 
         $album = new album;
         $album->id_account = $id;
         $album->album_avt = $img_url;
         $album->album_cover = $img_url_cover;
         $img = $album->save();
-
-        $info = $DanhSach->save();
+        
+        $info = $listdata->save();
         //printf($info);
         if($info != 1){
             $result = [
                   'success' => false,
                   'code' => 400,
-                  'message'=>'Cập nhật tài khoản không thành công',
+                  'message'=> trans('upate_unsuccess'),
                   'data' => null
             ];
         }else{
             $result = [
                   'success' => true,
                   'code' => 200,
-                  'message'=>'Cập nhật tài khoản thành công',
-                  'data' => $DanhSach,
+                  'message'=> tran('upate_success'),
+                  'data' => $listdata,
                   'img' => $album
             ];
         }

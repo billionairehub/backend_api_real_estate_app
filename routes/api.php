@@ -45,9 +45,14 @@ Route::get('logout-account',[
     'uses'=> 'Api\LoginController@logout'
 ]);
 
+Route::get('list-album/{id}',[
+    'as'=>'list-album',
+    'uses'=> 'Api\LoginController@getAlbum'
+]);
+
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[
     'as'=>'get-info-account',
-    'uses'=> 'Api\LoginController@laythongtin'
+    'uses'=> 'Api\LoginController@getInfo'
 ]);
 });
