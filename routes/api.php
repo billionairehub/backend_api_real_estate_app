@@ -35,6 +35,11 @@ Route::post('update-account/{id}',[
     'uses'=> 'Api\CreateAccountController@update'
 ]);
 
+Route::post('send-code',[
+    'as'=>'send-code',
+    'uses'=> 'Api\CreateAccountController@sendCode'
+]);
+
 Route::post('login-account',[
 	'as'=>'login-account',
     'uses'=> 'Api\LoginController@login'
@@ -49,6 +54,8 @@ Route::get('list-album/{id}',[
     'as'=>'list-album',
     'uses'=> 'Api\LoginController@getAlbum'
 ]);
+
+
 
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[

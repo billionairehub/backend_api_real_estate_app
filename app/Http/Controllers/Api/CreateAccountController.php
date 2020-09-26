@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon;
+use Mail;
 use DB;
 
 
@@ -243,6 +244,57 @@ class CreateAccountController extends Controller
         }
         return response()->json($result);
     }
+
+    function generateRandomString($length = 6) {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    public function sendCode(Request $request) {
+        $lst = $request->all();
+        if (array_key_exists('email', $lst)) {
+            $input = strtolower($request->email);
+            $accounExists = account::where('email', $input)->first();
+            if (!$accounExists) {
+                return  [
+                    'success' => false,
+                    'code' => 400,
+                    'message'=> trans('message.not_information')
+                ];
+            }
+            $code = $this->generateRandomString();
+            $timeExpireds = (Carbon::now()->timestamp) * 1000 + 3600000;
+            $data = array('emailto'=>$input, 'code'=>$code);
+            $listdata = account::where('email', $input)->first();
+            // $listdata->code = $code;
+            // $listdata->code_time_expireds = $timeExpireds;
+            // $listdata->save();
+            Mail::send(['html'=>'templateEmail'],$data, function($message) use ($data){
+                $message->to(reset($data), '')->subject('Quên mật khẩu');
+                $message->from('noreply.sharingroom@gmail.com', "noreply.sharingroom@gmail.com");
+            });
+            $result = [
+                'success' => true,
+                'code' => 200,
+                'message'=> trans('Send code success')
+            ];
+            return $result;
+        } else if (array_key_exists('phone', $lst)) {
+            //
+        } else {
+            return [
+                'success' => false,
+                'code' => 400,
+                'message'=> trans('message.not_information')
+            ];
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.

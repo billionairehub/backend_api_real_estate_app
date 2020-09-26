@@ -10,5 +10,6 @@ return [
     'upate_unsuccess' => 'Cập nhật không thành công!',
     'check_login' => 'Tên đăng nhập hoặc mật khẩu không chính xác!',
     'login_success' => 'Đăng nhập thành công!',
-    'get_info' => 'Lấy thông tin thành công'
+    'get_info' => 'Lấy thông tin thành công',
+    'not_information' => 'Không tìm thấy thông tin người dùng!',
 ]; 
