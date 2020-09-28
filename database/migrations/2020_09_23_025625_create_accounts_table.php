@@ -25,8 +25,8 @@ class CreateAccountsTable extends Migration
             $table->string('id_token_faceboook',255)->nullable();
             $table->string('id_token_google',255)->nullable();
             $table->date('birth_date')->nullable();
-            $table->string('code')->nullable();
-            $table->integer('code_time_expireds')->nullable();
+            $table->string('code', 6)->nullable();
+            $table->double('code_time_expireds', 20)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

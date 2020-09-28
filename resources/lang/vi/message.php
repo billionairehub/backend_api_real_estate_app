@@ -1,5 +1,6 @@
 <?php
 return [
+    'success' => 'Thành công!',
     'status_fail' => 'Lấy danh sách thất bại!',
     'status_pass' => 'Lấy danh sách thành công!',
     'data_exist' => 'Thông tin đã tồn tại!',
@@ -12,4 +13,8 @@ return [
     'login_success' => 'Đăng nhập thành công!',
     'get_info' => 'Lấy thông tin thành công',
     'not_information' => 'Không tìm thấy thông tin người dùng!',
+    'please_fill_out_the_form' => 'Vui lòng điền đầy đủ thông tin!',
+    'time_expireds' => 'Thời gian xác nhận đã quá hạn!',
+    'code_invalid' => 'Mã xác thực không đúng!',
+    'password_not_same' => 'Mật khẩu không giống nhau!',
 ]; 

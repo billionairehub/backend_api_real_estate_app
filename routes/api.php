@@ -35,11 +35,6 @@ Route::post('update-account/{id}',[
     'uses'=> 'Api\CreateAccountController@update'
 ]);
 
-Route::post('send-code',[
-    'as'=>'send-code',
-    'uses'=> 'Api\CreateAccountController@sendCode'
-]);
-
 Route::post('login-account',[
 	'as'=>'login-account',
     'uses'=> 'Api\LoginController@login'
@@ -53,6 +48,23 @@ Route::get('logout-account',[
 Route::get('list-album/{id}',[
     'as'=>'list-album',
     'uses'=> 'Api\LoginController@getAlbum'
+]);
+
+
+// Gui mail
+Route::post('send-code',[
+    'as'=>'send-code',
+    'uses'=> 'Api\MailServiceController@sendCode'
+]);
+// Check code
+Route::post('check-code-email', [
+    'as'=>'check-code-email',
+    'uses'=>'Api\MailServiceController@checkCodeEmail'
+]);
+// Change password
+Route::post('change-password', [
+    'as'=>'change-password',
+    'uses'=>'Api\MailServiceController@changePassword'
 ]);
 
 
