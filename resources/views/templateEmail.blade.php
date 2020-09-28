@@ -1,6 +1,6 @@
-<div>
+<div style="width:100%;">
 
-    <table id="m_-306828601232174754m_-718336216842275229tableParent" style="padding:1.5em 0.8em 1.5em 0.8em;background-color:#f5f5f5;border:1px solid #000" width="404px" cellspacing="0">
+    <table id="m_-306828601232174754m_-718336216842275229tableParent" style="padding:1.5em 0.8em 1.5em 0.8em;background-color:#f5f5f5;border:1px solid #000;margin:auto;" width="404px" cellspacing="0">
         <tbody><tr>
             <td>
                 <table style="background-color:#ffffff;padding:1.5em" width="100%" cellspacing="0">
@@ -19,9 +19,9 @@
                     </tr>
                     <tr>
                         <td>
-                            <a href="#m_-306828601232174754_m_-718336216842275229_" rel="noreferrer">
+                            <span>
                                 <button style="width:100%;padding:0.6em;background-color:#007ac2;border:0;font-family:Arial,Helvetica,sans-serif;color:#fff;font-weight:bold;font-size:1em">{{$code}}</button>
-                            </a>
+                            </span>
                         </td>
                     </tr>
                 </tbody></table>

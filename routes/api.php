@@ -51,7 +51,7 @@ Route::get('list-album/{id}',[
 ]);
 
 
-// Gui mail
+// Send mail
 Route::post('send-code',[
     'as'=>'send-code',
     'uses'=> 'Api\MailServiceController@sendCode'
@@ -67,11 +67,15 @@ Route::post('change-password', [
     'uses'=>'Api\MailServiceController@changePassword'
 ]);
 
-
-
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[
     'as'=>'get-info-account',
     'uses'=> 'Api\LoginController@getInfo'
-]);
+    ]);
+    // Post //
+    //create post
+    Route::post('create-post', [
+        'as'=>'create-post',
+        'uses'=>'Api\PostController@create'
+    ]);
 });

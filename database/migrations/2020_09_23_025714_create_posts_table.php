@@ -15,11 +15,11 @@ class CreatePostsTable extends Migration
     {
         Schema::create('post', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_account');
-            $table->date('post_date');
-            $table->integer('sum_image');
-            $table->integer('id_comment');
-            $table->integer('id_like');
+            $table->bigInteger('post_author');
+            $table->longText('post_content');
+            $table->longText('post_image');
+            $table->string('post_status', 20);
+            $table->tinyInteger('post_comment_status');
             $table->timestamps();
             $table->softDeletes();
         });
