@@ -18,4 +18,12 @@ return [
     'time_expireds' => 'Thời gian xác nhận đã quá hạn!',
     'code_invalid' => 'Mã xác thực không đúng!',
     'password_not_same' => 'Mật khẩu không giống nhau!',
+
+
+    'real_estate' => 'Bất động sản',
+    'thank_you_for_using_our_service' => 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi',
+    'this_is_your_password_forgotten_code_please_do_not_provide_this_code_to_anyone' => 'Đây là mã quên mật khẩu của bạn. Vui lòng không cung cấp mã này cho bất kỳ ai',
+    'thank_you_very_much' => 'Cảm ơn rất nhiều',
+    'copyright' => 'Bản quyền',
+    'all_rights_reserved' => 'Đã đăng ký Bản quyền'
 ]; 
