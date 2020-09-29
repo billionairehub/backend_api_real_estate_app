@@ -160,11 +160,13 @@ class PostController extends Controller
         if (array_key_exists('post_image', $lst)) {
             $post->post_image = $lst['post_image'];
         }
+        $post->post_status = Constants::STATUS_POST_PUBLISHED;
         if (array_key_exists('post_status', $lst)) {
-            $post->post_status = Constants::STATUS_POST_PUBLISHED;
+            $post->post_status = $lst['post_status'];
         }
+        $post->post_comment_status = Constants::STATUS_COMMENT_POST_UNBLOCK;
         if (array_key_exists('post_comment_status', $lst)) {
-            $post->post_comment_status = Constants::STATUS_COMMENT_POST_UNBLOCK;
+            $post->post_comment_status = $lst['post_comment_status'];
         }
         $newdata = $post->save();
         if($newdata != 1){
