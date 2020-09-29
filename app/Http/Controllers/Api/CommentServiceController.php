@@ -1,0 +1,226 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Constants;
+use App\comment;
+
+class CommentServiceController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $lst = $request->all();
+        $offset = Constants::OFFSET;
+        $limit = Constants::LIMIT;
+        if ($request['offset'] != null) {
+            $offset = $lst['offset'];
+        }
+        if ($request['limit'] !=  null) {
+            $limit = $lst['limit'];
+        }
+        $comments = comment::where('post_id', '=', $lst['post_id'])->where('comment_level', '=', 1)->limit($limit)->offset($offset)->get();
+        $result = [
+            'success' => true,
+            'code' => 200,
+            'data' => $comments
+        ];
+        return response()->json($result);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        $lst = $request->all();
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
+        if (array_key_exists('post_id', $lst) && array_key_exists('comment_content', $lst)) {
+            $comment = new comment;
+            $comment->post_id = $lst['post_id'];
+            $comment->user_id = $userId;
+            $comment->comment_content = $lst['comment_content'];
+            if (array_key_exists('comment_id', $lst) && $lst['comment_id'] != null) {
+                $comment->comment_level = 2;
+                $comment->comment_id = $lst['comment_id'];
+            } else {
+                $comment->comment_level = 1;
+            }
+            $success = $comment->save();
+            if($success != 1){
+                $result = [
+                      'success' => false,
+                      'code' => 400,
+                      'message'=> trans('message.add_unsuccess'),
+                      'data' => null
+                ];
+            }else{
+                $result = [
+                      'success' => true,
+                      'code' => 200,
+                      'message'=> trans('message.add_success'),
+                      'data' => $comment
+                ];
+            }
+            return response()->json($result);
+        }
+        return  [
+            'success' => false,
+            'code' => 400,
+            'message' => trans('message.please_fill_out_the_form')
+        ];
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        $lst = $request->all();
+        $offset = Constants::OFFSET;
+        $limit = Constants::LIMIT;
+        if ($request['offset'] != null) {
+            $offset = $lst['offset'];
+        }
+        if ($request['limit'] !=  null) {
+            $limit = $lst['limit'];
+        }
+        $comments = comment::where('post_id', '=', $lst['post_id'])->where('comment_level', '=', 2)->where('comment_id', '=', $lst['comment_id'])->limit($limit)->offset($offset)->get();
+        $result = [
+            'success' => true,
+            'code' => 200,
+            'data' => $comments
+        ];
+        return response()->json($result);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        $lst = $request->all();
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
+        $commented = comment::where('post_id', '=', $lst['post_id'])->where('comment_id', '=', $lst['comment_id'])->first();
+        if (!$commented) {
+            return [
+                'success' => false,
+                'code' => 403,
+                'message' => trans('message.not_found')
+            ];
+        }
+        $commented->comment_content = $lst['comment_content'];
+        $success = $commented->save();
+        if($success != 1){
+            $result = [
+                  'success' => false,
+                  'code' => 400,
+                  'message'=> trans('message.upate_unsuccess'),
+                  'data' => null
+            ];
+        }else{
+            $result = [
+                  'success' => true,
+                  'code' => 200,
+                  'message'=> trans('message.upate_success'),
+                  'data' => $commented
+            ];
+        }
+        return response()->json($result);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
+        $comment = comment::find($id);
+        if ($comment->user_id != $userId) {
+            return [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.can_not_action')
+            ];
+        }
+        if (!$comment) {
+            return [
+                'success' => false,
+                'code' => 403,
+                'message'=> trans('message.not_found_item')
+            ];
+        }
+        $listCommentChildren = comment::where('comment_id', '=', $id)->get();
+        for ($i = 0; $i < count($listCommentChildren); $i++) {
+            $listCommentChildren[$i]->delete();
+        }
+        $comment->delete();
+        return [
+            'success' => true,
+            'code' => 200,
+            'message'=> trans('message.delete_success'),
+            'data' => $comment
+        ];
+    }
+}

@@ -22,6 +22,7 @@ return [
     'password_not_same' => 'Mật khẩu không giống nhau!',
     'not_found_item' => 'Không tìm thấy sản phẩm!',
     'can_not_action' => 'Bạn không thể thực hiện hành động này!',
+    'not_found' => 'Không tìm thấy!',
 
 
     'real_estate' => 'Bất động sản',

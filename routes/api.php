@@ -77,6 +77,16 @@ Route::get('post/{id}', [
     'as'=>'post',
     'uses'=>'Api\PostController@show'
 ]);
+// Get comments
+Route::post('comment', [
+    'as'=>'comment',
+    'uses'=>'Api\CommentServiceController@index'
+]);
+// Get reply comments
+Route::post('recomment', [
+    'as'=>'comment',
+    'uses'=>'Api\CommentServiceController@show'
+]);
 
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[
@@ -100,14 +110,30 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'uses'=>'Api\PostController@destroy'
     ]);
     // Like //
-    // Add like //
+    // Add like
     Route::post('add-like', [
         'as'=>'add-like',
         'uses'=>'Api\LikeServiceController@like'
     ]);
-    // Unlike //
+    // Unlike
     Route::post('un-like', [
         'as'=>'un-like',
         'uses'=>'Api\LikeServiceController@unlike'
+    ]);
+    // Comment //
+    // Add comment
+    Route::post('add-comment', [
+        'as'=>'add-comment',
+        'uses'=>'Api\CommentServiceController@create'
+    ]);
+    // Update comment
+    Route::post('update-comment', [
+        'as'=>'update-comment',
+        'uses'=>'Api\CommentServiceController@update'
+    ]);
+    // Delete comment
+    Route::get('delete-comment/{id}', [
+        'as'=>'delete-comment',
+        'uses'=>'Api\CommentServiceController@destroy'
     ]);
 });
