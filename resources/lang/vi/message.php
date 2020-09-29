@@ -10,6 +10,8 @@ return [
     'add_unsuccess' => 'Thêm không thành công!',
     'upate_success' => 'Cập nhật thành công!',
     'upate_unsuccess' => 'Cập nhật không thành công!',
+    'delete_success' => 'Xóa thành công!',
+    'delete_unsuccess' => 'Xóa không thành công!',
     'check_login' => 'Tên đăng nhập hoặc mật khẩu không chính xác!',
     'login_success' => 'Đăng nhập thành công!',
     'get_info' => 'Lấy thông tin thành công',
@@ -18,6 +20,7 @@ return [
     'time_expireds' => 'Thời gian xác nhận đã quá hạn!',
     'code_invalid' => 'Mã xác thực không đúng!',
     'password_not_same' => 'Mật khẩu không giống nhau!',
+    'not_found_item' => 'Không tìm thấy sản phẩm',
 
 
     'real_estate' => 'Bất động sản',
@@ -25,5 +28,5 @@ return [
     'this_is_your_password_forgotten_code_please_do_not_provide_this_code_to_anyone' => 'Đây là mã quên mật khẩu của bạn. Vui lòng không cung cấp mã này cho bất kỳ ai',
     'thank_you_very_much' => 'Cảm ơn rất nhiều',
     'copyright' => 'Bản quyền',
-    'all_rights_reserved' => 'Đã đăng ký Bản quyền'
+    'all_rights_reserved' => 'Đã đăng ký Bản quyền',
 ]; 

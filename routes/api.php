@@ -68,9 +68,24 @@ Route::post('change-password', [
 ]);
 
 // Get post
-Route::get('post/post{offset}{limit}', [
+Route::get('post', [
     'as'=>'post',
     'uses'=>'Api\PostController@index'
+]);
+// Get a Post
+Route::get('post/{id}', [
+    'as'=>'post',
+    'uses'=>'Api\PostController@show'
+]);
+//Update post
+Route::post('update-post/{id}', [
+    'as'=>'update-post',
+    'uses'=>'Api\PostController@update'
+]);
+//Delete post
+Route::post('delete-post/{id}', [
+    'as'=>'delete-post',
+    'uses'=>'Api\PostController@destroy'
 ]);
 
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
