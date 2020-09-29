@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Constants;
 use Carbon\Carbon;
 use Image;
@@ -17,6 +18,16 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    function generateRandomString($length = 10) {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     public function index(Request $request)
     {
         $lst = $request->all();
@@ -63,27 +74,28 @@ class PostController extends Controller
             $post = new post;
             $post->post_author = $userId;
             $post->post_content = $lst['post_content'];
-<<<<<<< HEAD
-
-            $now = Carbon::now();
-            $photo_name = Carbon::parse($now)->format('YmdHis').'.jpg';
+            $url = Storage::url('202009290607360LOCB6EYAFA.jpg');
+            dd($url);
             $string = '';
-            $count_img = count($_FILES['post_image']);
+            $count_img = count($request->file('post_image'));
             for($i = 0 ; $i < $count_img ; $i++ )
             {
-                $img_full_size = Image::make($request->file('post_image')->getRealPath())->filesize();
+                $generateName = $this->generateRandomString();
+                $now = Carbon::now();
+                $photo_name = Carbon::parse($now)->format('YmdHis').$i.$generateName.'.jpg';
+                $img_full_size = Image::make(($request->file('post_image')[$i])->getRealPath())->filesize();
                 if($img_full_size > 2000000 )
                 {
-                    $path_resize = $request->file('post_image')->storeAs('./img_post_resize/',$photo_name);
+                    $path_resize = ($request->file('post_image')[$i])->storeAs('./img_post_resize/',$photo_name);
                     $size =  Image::make(Storage::get($path_resize))->resize(750,512)->encode();;
                     Storage::put($path_resize, $size);
                     $img_url_re = asset('/storage/img_post_resize/'.$photo_name);
                     $string = $string.$img_url_re;
                 }
-                else 
+                else
                 {
-                    $path = $request->file('post_image')->storeAs('./img_post/',$photo_name);//save img resize to image_avata
-                    $path_resize = $request->file('post_image')->storeAs('./img_post/',$photo_name);
+                    $path = $request->file('post_image')[$i]->storeAs('./img_post/',$photo_name);//save img resize to image_avata
+                    $path_resize = ($request->file('post_image')[$i])->storeAs('./img_post/',$photo_name);
                     $img_url = asset('/storage/img_post/'.$photo_name);
                     $string = $string.$img_url;
                 }
@@ -91,13 +103,18 @@ class PostController extends Controller
                     $string = $string . ',';
                 }
             }
+
             $post->post_image = $string;
-=======
-            $post->post_image = $lst['post_image'];
->>>>>>> f8fb2c3763354ecbc6c6752a8fd3add290c9ec6c
             $post->post_status = Constants::STATUS_POST_PUBLISHED;
             $post->post_comment_status = Constants::STATUS_COMMENT_POST_UNBLOCK;
+            if (array_key_exists('post_status', $lst)) {
+                $post->post_status = $lst['post_status'];
+            }
+            if (array_key_exists('post_comment_status', $lst)) {
+                $post->post_comment_status = $lst['post_comment_status'];
+            }
             $success = $post->save();
+
             if($success != 1){
                 $result = [
                       'success' => false,
@@ -178,8 +195,23 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $lst = $request->all();
         $post = post::find($id);
+        if ($post->post_author != $userId) {
+            return [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.can_not_action')
+            ];
+        }
         if (!$post) {
              return [
                 'success' => false,
@@ -191,7 +223,34 @@ class PostController extends Controller
             $post->post_content = $lst['post_content'];
         }
         if (array_key_exists('post_image', $lst)) {
-            $post->post_image = $lst['post_image'];
+            $string = '';
+            $count_img = count($request->file('post_image'));
+            for($i = 0 ; $i < $count_img ; $i++ )
+            {
+                $generateName = $this->generateRandomString();
+                $now = Carbon::now();
+                $photo_name = Carbon::parse($now)->format('YmdHis').$i.$generateName.'.jpg';
+                $img_full_size = Image::make(($request->file('post_image')[$i])->getRealPath())->filesize();
+                if($img_full_size > 2000000 )
+                {
+                    $path_resize = ($request->file('post_image')[$i])->storeAs('./img_post_resize/',$photo_name);
+                    $size =  Image::make(Storage::get($path_resize))->resize(750,512)->encode();;
+                    Storage::put($path_resize, $size);
+                    $img_url_re = asset('/storage/img_post_resize/'.$photo_name);
+                    $string = $string.$img_url_re;
+                }
+                else
+                {
+                    $path = $request->file('post_image')[$i]->storeAs('./img_post/',$photo_name);//save img resize to image_avata
+                    $path_resize = ($request->file('post_image')[$i])->storeAs('./img_post/',$photo_name);
+                    $img_url = asset('/storage/img_post/'.$photo_name);
+                    $string = $string.$img_url;
+                }
+                if ($i < ($count_img - 1)) {
+                    $string = $string . ',';
+                }
+            }
+            $post->post_image = $string;
         }
         $post->post_status = Constants::STATUS_POST_PUBLISHED;
         if (array_key_exists('post_status', $lst)) {
@@ -229,7 +288,22 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $post = post::find($id);
+        if ($post->post_author != $userId) {
+            return [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.can_not_action')
+            ];
+        }
         if (!$post) {
             return [
                 'success' => false,

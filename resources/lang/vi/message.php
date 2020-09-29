@@ -20,7 +20,8 @@ return [
     'time_expireds' => 'Thời gian xác nhận đã quá hạn!',
     'code_invalid' => 'Mã xác thực không đúng!',
     'password_not_same' => 'Mật khẩu không giống nhau!',
-    'not_found_item' => 'Không tìm thấy sản phẩm',
+    'not_found_item' => 'Không tìm thấy sản phẩm!',
+    'can_not_action' => 'Bạn không thể thực hiện hành động này!',
 
 
     'real_estate' => 'Bất động sản',
