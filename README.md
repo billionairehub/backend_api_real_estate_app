@@ -1,10 +1,16 @@
 ## Flow of data processing
 ```sh
-/sendcode => /check-code-email => /change-password
+/add-like
+/un-like
 ```
-### /send-code
+### /add-like
 ```sh
-parameters passed: email
+parameters passed: id_post
+method: POST
+```
+### /un-like
+```sh
+parameters passed: id_post
 method: POST
 ```
 
