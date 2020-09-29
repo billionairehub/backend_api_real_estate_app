@@ -17,9 +17,29 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $lst = $request->all();
+        $offset = Constants::OFFSET;
+        $limit = Constants::LIMIT;
+        if ($request['offset'] != null) {
+            $offset = $lst['offset'];
+        }
+        if ($request['limit'] !=  null) {
+            $limit = $lst['limit'];
+        }
+        $posts = post::limit($limit)->offset($offset)->get();
+        $data = [];
+        for ($i = 0; $i < $limit; $i++) {
+            $posts[$i]->post_image = explode(',', $posts[$i]->post_image);
+            array_push($data, $posts[$i]);
+        }
+        $result = [
+            'success' => true,
+            'code' => 200,
+            'data' => $posts
+        ];
+        return response()->json($result);
     }
 
     /**
@@ -43,6 +63,7 @@ class PostController extends Controller
             $post = new post;
             $post->post_author = $userId;
             $post->post_content = $lst['post_content'];
+<<<<<<< HEAD
 
             $now = Carbon::now();
             $photo_name = Carbon::parse($now)->format('YmdHis').'.jpg';
@@ -71,6 +92,9 @@ class PostController extends Controller
                 }
             }
             $post->post_image = $string;
+=======
+            $post->post_image = $lst['post_image'];
+>>>>>>> f8fb2c3763354ecbc6c6752a8fd3add290c9ec6c
             $post->post_status = Constants::STATUS_POST_PUBLISHED;
             $post->post_comment_status = Constants::STATUS_COMMENT_POST_UNBLOCK;
             $success = $post->save();
@@ -82,6 +106,7 @@ class PostController extends Controller
                       'data' => null
                 ];
             }else{
+                $post->post_image = explode(',', $post->post_image);
                 $result = [
                       'success' => true,
                       'code' => 200,
@@ -116,7 +141,21 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = post::where('id', $id)->get();
+        if (count($data) == 0) {
+             return [
+                'success' => false,
+                'code' => 403,
+                'message' => trans('message.not_found_item')
+             ];
+        }
+        $data[0]->post_image = explode(',', $data[0]->post_image);
+        return [
+            'success' => true,
+            'code' => 200,
+            'message' => trans('message.success'),
+            'data' => $data
+        ];
     }
 
     /**
@@ -139,7 +178,45 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $lst = $request->all();
+        $post = post::find($id);
+        if (!$post) {
+             return [
+                'success' => false,
+                'code' => 403,
+                'message' => trans('message.not_found_item')
+             ];
+        }
+        if (array_key_exists('post_content', $lst)) {
+            $post->post_content = $lst['post_content'];
+        }
+        if (array_key_exists('post_image', $lst)) {
+            $post->post_image = $lst['post_image'];
+        }
+        if (array_key_exists('post_status', $lst)) {
+            $post->post_status = Constants::STATUS_POST_PUBLISHED;
+        }
+        if (array_key_exists('post_comment_status', $lst)) {
+            $post->post_comment_status = Constants::STATUS_COMMENT_POST_UNBLOCK;
+        }
+        $newdata = $post->save();
+        if($newdata != 1){
+            $result = [
+                  'success' => false,
+                  'code' => 400,
+                  'message'=> trans('message.upate_unsuccess'),
+                  'data' => null
+            ];
+        }else{
+            $post->post_image = explode(',', $post->post_image);
+            $result = [
+                  'success' => true,
+                  'code' => 200,
+                  'message'=> trans('message.upate_success'),
+                  'data' => $post
+            ];
+        }
+        return response()->json($result);
     }
 
     /**
@@ -150,6 +227,21 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = post::find($id);
+        if (!$post) {
+            return [
+                'success' => false,
+                'code' => 403,
+                'message'=> trans('message.not_found_item')
+            ];
+        }
+        $post->delete();
+        $post->post_image = explode(',', $post->post_image);
+        return [
+            'success' => true,
+            'code' => 200,
+            'message'=> trans('message.delete_success'),
+            'data' => $post
+        ];
     }
 }
