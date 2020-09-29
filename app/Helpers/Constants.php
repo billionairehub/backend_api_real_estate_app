@@ -14,6 +14,10 @@ class Constants
     CONST STATUS_COMMENT_POST_BLOCK = 0;
     CONST STATUS_COMMENT_POST_UNBLOCK = 1;
 
+    CONST LIMIT = 15;
+    CONST OFFSET = 0;
+    // --------------------------------------------------------//
+
     const REFERRAL_COOKIE_KEY = 'referral_code';
     // Account Status
     const ACCOUNT_STATUS_ACTIVE     = 'active';

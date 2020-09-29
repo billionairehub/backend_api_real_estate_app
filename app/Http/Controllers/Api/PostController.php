@@ -15,9 +15,18 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $lst = $request->all();
+        $offset = ;
+        $limit = ;
+        if (array_key_exists('offset', $lst)) {
+            $offset = $lst['offset'];
+        }
+        if (array_key_exists('limit', $lst)) {
+            $limit = $lst['limit'];
+        }
+        $posts = post::limit($limit)->offset($offset)->get();
     }
 
     /**
@@ -39,11 +48,11 @@ class PostController extends Controller
         if (array_key_exists('post_content', $lst) && array_key_exists('post_image', $lst)) {
             $lst = $request->all();
             $post = new post;
-            $post->post_athor = $userId;
+            $post->post_author = $userId;
             $post->post_content = $lst['post_content'];
             $post->post_image = $lst['post_image'];
-            $post->post_status = Constant::STATUS_POST_PUBLISHED;
-            $post->post_comment_status = Constant::STATUS_COMMENT_POST_UNBLOCK;
+            $post->post_status = Constants::STATUS_POST_PUBLISHED;
+            $post->post_comment_status = Constants::STATUS_COMMENT_POST_UNBLOCK;
             $success = $post->save();
             if($success != 1){
                 $result = [
@@ -57,8 +66,7 @@ class PostController extends Controller
                       'success' => true,
                       'code' => 200,
                       'message'=> trans('message.add_success'),
-                      'data' => $post,
-                      'data_album' => $album
+                      'data' => $post
                 ];
             }
             return response()->json($result);
