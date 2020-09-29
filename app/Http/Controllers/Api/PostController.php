@@ -15,11 +15,12 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $offset, $limit)
     {
+        dd($offset, $limit);
         $lst = $request->all();
-        $offset = ;
-        $limit = ;
+        $offset = Constants::OFFSET;
+        $limit = Constants::LIMIT;
         if (array_key_exists('offset', $lst)) {
             $offset = $lst['offset'];
         }
@@ -27,6 +28,12 @@ class PostController extends Controller
             $limit = $lst['limit'];
         }
         $posts = post::limit($limit)->offset($offset)->get();
+        $result = [
+            'success' => true,
+            'code' => 200,
+            'data' => $posts
+        ];
+        return response()->json($result);
     }
 
     /**

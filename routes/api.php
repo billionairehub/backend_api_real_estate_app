@@ -67,6 +67,12 @@ Route::post('change-password', [
     'uses'=>'Api\MailServiceController@changePassword'
 ]);
 
+// Get post
+Route::get('post/post{offset}{limit}', [
+    'as'=>'post',
+    'uses'=>'Api\PostController@index'
+]);
+
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[
     'as'=>'get-info-account',
