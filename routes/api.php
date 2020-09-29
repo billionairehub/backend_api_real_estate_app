@@ -99,4 +99,15 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'delete-post',
         'uses'=>'Api\PostController@destroy'
     ]);
+    // Like //
+    // Add like //
+    Route::post('add-like', [
+        'as'=>'add-like',
+        'uses'=>'Api\LikeServiceController@like'
+    ]);
+    // Unlike //
+    Route::post('un-like', [
+        'as'=>'un-like',
+        'uses'=>'Api\LikeServiceController@unlike'
+    ]);
 });

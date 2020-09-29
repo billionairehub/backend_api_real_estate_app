@@ -75,7 +75,6 @@ class PostController extends Controller
             $post->post_author = $userId;
             $post->post_content = $lst['post_content'];
             $url = Storage::url('202009290607360LOCB6EYAFA.jpg');
-            dd($url);
             $string = '';
             $count_img = count($request->file('post_image'));
             for($i = 0 ; $i < $count_img ; $i++ )
