@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Constants;
+use App\post;
 use App\comment;
 
 class CommentServiceController extends Controller
@@ -51,6 +52,14 @@ class CommentServiceController extends Controller
           ];
         }
         if (array_key_exists('post_id', $lst) && array_key_exists('comment_content', $lst)) {
+            $acceptComment = post::find($lst['post_id']);
+            if ($acceptComment->post_comment_status == 0) {
+                return [
+                    'success' => false,
+                    'code' => 400,
+                    'message'=> trans('message.can_not_action')
+                ];
+            }
             $comment = new comment;
             $comment->post_id = $lst['post_id'];
             $comment->user_id = $userId;
