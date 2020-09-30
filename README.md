@@ -1,16 +1,23 @@
 ## Flow of data processing
 ```sh
-/add-like
-/un-like
+/list-followed
+/add-follow
+/un-follow
 ```
-### /add-like
+### /list-followed
 ```sh
-parameters passed: id_post
+parameters passed: followers, offset, limit
+note: offset and limit may be empty
 method: POST
 ```
-### /un-like
+### /add-follow
 ```sh
-parameters passed: id_post
+parameters passed: followers
+method: POST
+```
+### /un-follow
+```sh
+parameters passed: followers
 method: POST
 ```
 

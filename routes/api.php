@@ -136,4 +136,20 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'delete-comment',
         'uses'=>'Api\CommentServiceController@destroy'
     ]);
+    // Follow //
+    // Get follow
+    Route::post('list-followed', [
+        'as'=>'list-followed',
+        'uses'=>'Api\FollowServiceController@index'
+    ]);
+    // Add follow
+    Route::post('add-follow', [
+        'as'=>'add-follow',
+        'uses'=>'Api\FollowServiceController@create'
+    ]);
+    // Delete follow
+    Route::post('un-follow', [
+        'as'=>'un-follow',
+        'uses'=>'Api\FollowServiceController@destroy'
+    ]);
 });
