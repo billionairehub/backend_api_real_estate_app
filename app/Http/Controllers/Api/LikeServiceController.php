@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Constants;
 use DB;
 use App\like;
+use App\account;
 
 class LikeServiceController extends Controller
 {
@@ -28,6 +29,10 @@ class LikeServiceController extends Controller
                 $limit = $lst['limit'];
             }
             $like = like::where('id_post', '=', $lst['post_id'])->limit($limit)->offset($offset)->get();
+            for ($i = 0; $i < count($like); $i++) {
+                $user = account::where('id', '=',  $like[$i]->id_account_like)->first();
+                $like[$i]->id_account_like = $user;
+            }
             return [
                 'success' => true,
                 'code' => 200,

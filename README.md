@@ -6,7 +6,7 @@
 ```
 ### /list-like
 ```sh
-parameters passed: id_post, offset, limit
+parameters passed: post_id, offset, limit
 note: offset and limit may be empty
 method: POST
 ```
