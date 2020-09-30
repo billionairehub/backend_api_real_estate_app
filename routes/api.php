@@ -68,7 +68,7 @@ Route::post('change-password', [
 ]);
 
 // Get post
-Route::get('post', [
+Route::post('post', [
     'as'=>'post',
     'uses'=>'Api\PostController@index'
 ]);

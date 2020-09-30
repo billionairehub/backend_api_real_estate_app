@@ -10,6 +10,7 @@ use Constants;
 use Carbon\Carbon;
 use Image;
 use App\post;
+use App\account;
 
 class PostController extends Controller
 {
@@ -33,17 +34,17 @@ class PostController extends Controller
         $lst = $request->all();
         $offset = Constants::OFFSET;
         $limit = Constants::LIMIT;
-        if ($request['offset'] != null) {
+        if ($request->offset != null) {
             $offset = $lst['offset'];
         }
-        if ($request['limit'] !=  null) {
+        if ($request->limit !=  null) {
             $limit = $lst['limit'];
         }
         $posts = post::limit($limit)->offset($offset)->get();
-        $data = [];
         for ($i = 0; $i < $limit; $i++) {
             $posts[$i]->post_image = explode(',', $posts[$i]->post_image);
-            array_push($data, $posts[$i]);
+            $author = account::find($posts[$i]->post_author);
+            $posts[$i]->post_author = $author;
         }
         $result = [
             'success' => true,
@@ -69,7 +70,7 @@ class PostController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        if (array_key_exists('post_content', $lst) && array_key_exists('post_image', $lst)) {
+        if (array_key_exists('post_content', $lst) && array_key_exists('post_image', $lst) && $lst['post_content'] != null && $lst['post_image'] != null) {
             $lst = $request->all();
             $post = new post;
             $post->post_author = $userId;
@@ -167,6 +168,8 @@ class PostController extends Controller
              ];
         }
         $data[0]->post_image = explode(',', $data[0]->post_image);
+        $author = account::find($data[0]->post_author);
+        $data[0]->post_author = $author;
         return [
             'success' => true,
             'code' => 200,
