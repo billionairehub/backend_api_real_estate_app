@@ -77,6 +77,11 @@ Route::get('post/{id}', [
     'as'=>'post',
     'uses'=>'Api\PostController@show'
 ]);
+//Get list like
+Route::post('list-like', [
+    'as'=>'list-like',
+    'uses'=>'Api\LikeServiceController@index'
+]);
 
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[

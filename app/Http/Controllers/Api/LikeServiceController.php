@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Constants;
+use DB;
 use App\like;
 
 class LikeServiceController extends Controller
@@ -13,9 +15,31 @@ class LikeServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $lst = $request->all();
+        if (array_key_exists('post_id', $lst) && $lst['post_id'] != null) {
+            $offset = Constants::OFFSET;
+            $limit = Constants::LIMIT;
+            if ($request['offset'] != null) {
+                $offset = $lst['offset'];
+            }
+            if ($request['limit'] !=  null) {
+                $limit = $lst['limit'];
+            }
+            $like = like::where('id_post', '=', $lst['post_id'])->limit($limit)->offset($offset)->get();
+            return [
+                'success' => true,
+                'code' => 200,
+                'message' => trans('message.status_pass'),
+                'data' => $like
+            ];
+        }
+        return [
+            'success' => false,
+            'code' => 401,
+            'message' => trans('message.not_found_item')
+        ];
     }
 
     /**
