@@ -23,6 +23,7 @@ return [
     'not_found_item' => 'Không tìm thấy sản phẩm!',
     'can_not_action' => 'Bạn không thể thực hiện hành động này!',
     'not_found' => 'Không tìm thấy!',
+    'input_not_right' => 'Trường dữ liệu nhập vào không đúng!',
 
 
     'real_estate' => 'Bất động sản',

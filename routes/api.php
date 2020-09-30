@@ -22,8 +22,8 @@ Route::get('list-account',[
     'as'=>'list-account',
     'uses'=> 'Api\CreateAccountController@index'
 ]);
-Route::post('list-account',[
-    'as'=>'list-account',
+Route::post('create-account',[
+    'as'=>'create-account',
     'uses'=> 'Api\CreateAccountController@store'
 ]);
 Route::get('list-account/{id}',[
@@ -93,7 +93,8 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
     'as'=>'get-info-account',
     'uses'=> 'Api\LoginController@getInfo'
     ]);
-    // Post //
+    //================================//================================
+    // Post
     //create post
     Route::post('create-post', [
         'as'=>'create-post',
@@ -109,6 +110,7 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'delete-post',
         'uses'=>'Api\PostController@destroy'
     ]);
+    //================================//================================
     // Like //
     // Add like
     Route::post('add-like', [
@@ -120,6 +122,7 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'un-like',
         'uses'=>'Api\LikeServiceController@unlike'
     ]);
+    //================================//================================
     // Comment //
     // Add comment
     Route::post('add-comment', [
@@ -136,6 +139,7 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'delete-comment',
         'uses'=>'Api\CommentServiceController@destroy'
     ]);
+    //================================//================================
     // Follow //
     // Get follow
     Route::post('list-followed', [
@@ -152,4 +156,31 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'un-follow',
         'uses'=>'Api\FollowServiceController@destroy'
     ]);
+    //================================//================================
+    // News || Post in Home page //
+    Route::post('news', [
+        'as'=>'news',
+        'uses'=>'Api\NewsServiceController@index'
+    ]);
+    Route::get('news/{id}', [
+        'as'=>'news',
+        'uses'=>'Api\NewsServiceController@show'
+    ]);
+    Route::post('my-news', [
+        'as'=>'my-news',
+        'uses'=>'Api\NewsServiceController@mynews'
+    ]);
+    Route::post('add-news', [
+        'as'=>'add-news',
+        'uses'=>'Api\NewsServiceController@create'
+    ]);
+    Route::post('edit-news/{id}', [
+        'as'=>'edit-news',
+        'uses'=>'Api\NewsServiceController@update'
+    ]);
+    Route::get('delete-news/{id}', [
+        'as'=>'delete-news',
+        'uses'=>'Api\NewsServiceController@destroy'
+    ]);
+    //================================//================================
 });
