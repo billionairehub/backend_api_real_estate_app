@@ -34,6 +34,10 @@ class FollowServiceController extends Controller
             $limit = $lst['limit'];
         }
         $follow = follow::where('id_account', '=', $userId)->limit($limit)->offset($offset)->get();
+        for ($i = 0; $i < count($follow); $i++) {
+            $user = account::where('id', '=', $follow[$i]->id_followers)->first();
+            $follow[$i]->id_followers = $user;
+        }
         $result = [
             'success' => true,
             'code' => 200,
