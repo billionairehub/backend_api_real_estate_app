@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Constants;
 use App\post;
 use App\comment;
+use App\account;
 
 class CommentServiceController extends Controller
 {
@@ -27,6 +28,10 @@ class CommentServiceController extends Controller
             $limit = $lst['limit'];
         }
         $comments = comment::where('post_id', '=', $lst['post_id'])->where('comment_level', '=', 1)->limit($limit)->offset($offset)->get();
+        for ($i = 0; $i < count($comments); $i++) {
+            $user = account::where('id', '=', $comments[$i]->user_id)->first();
+            $comments[$i]->user_id = $user;
+        }
         $result = [
             'success' => true,
             'code' => 200,
@@ -161,7 +166,7 @@ class CommentServiceController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        $commented = comment::where('post_id', '=', $lst['post_id'])->where('comment_id', '=', $lst['comment_id'])->first();
+        $commented = comment::where('post_id', '=', $lst['post_id'])->where('id', '=', $lst['id_comment'])->first();
         if (!$commented) {
             return [
                 'success' => false,
