@@ -89,6 +89,11 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'create-post',
         'uses'=>'Api\PostController@create'
     ]);
+    //Get my post
+    Route::post('my-post', [
+        'as'=>'my-post',
+        'uses'=>'Api\PostController@mypost'
+    ]);
     //Update post
     Route::post('update-post/{id}', [
         'as'=>'update-post',

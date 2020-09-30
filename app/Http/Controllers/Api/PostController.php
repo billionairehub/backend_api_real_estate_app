@@ -178,6 +178,39 @@ class PostController extends Controller
         ];
     }
 
+    public function mypost(Request $request) {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
+        $offset = Constants::OFFSET;
+        $limit = Constants::LIMIT;
+        if ($request['offset'] != null) {
+            $offset = $lst['offset'];
+        }
+        if ($request['limit'] !=  null) {
+            $limit = $lst['limit'];
+        }
+        $post = post::where('post_author', '=', $userId)->limit($limit)->offset($offset)->get();
+        for ($i = 0; $i < count($post); $i++) {
+            $post[$i]->post_image  = explode(',', $post[$i]->post_image);
+        }
+        for ($i = 0; $i < count($post); $i++) {
+            $author = account::where('id', '=', $post[$i]->post_author)->first();
+            $post[$i]->post_author = $author;
+        }
+        $result = [
+            'success' => true,
+            'code' => 200,
+            'data' => $post
+        ];
+        return response()->json($result);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
