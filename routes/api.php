@@ -99,9 +99,15 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'update-post',
         'uses'=>'Api\PostController@update'
     ]);
-    //Delete post
+    // Delete post
     Route::post('delete-post/{id}', [
         'as'=>'delete-post',
         'uses'=>'Api\PostController@destroy'
+    ]);
+
+    // Search
+    Route::get('search/result', [
+        'as'=>'search/result',
+        'uses'=>'Api\SearchServiceController@index'
     ]);
 });
