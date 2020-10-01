@@ -22,8 +22,8 @@ Route::get('list-account',[
     'as'=>'list-account',
     'uses'=> 'Api\CreateAccountController@index'
 ]);
-Route::post('list-account',[
-    'as'=>'list-account',
+Route::post('create-account',[
+    'as'=>'create-account',
     'uses'=> 'Api\CreateAccountController@store'
 ]);
 Route::get('list-account/{id}',[
@@ -77,13 +77,24 @@ Route::get('post/{id}', [
     'as'=>'post',
     'uses'=>'Api\PostController@show'
 ]);
+// Get comments
+Route::post('comment', [
+    'as'=>'comment',
+    'uses'=>'Api\CommentServiceController@index'
+]);
+// Get reply comments
+Route::post('recomment', [
+    'as'=>'comment',
+    'uses'=>'Api\CommentServiceController@show'
+]);
 
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[
     'as'=>'get-info-account',
     'uses'=> 'Api\LoginController@getInfo'
     ]);
-    // Post //
+    //================================//================================
+    // Post
     //create post
     Route::post('create-post', [
         'as'=>'create-post',
@@ -104,10 +115,82 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'delete-post',
         'uses'=>'Api\PostController@destroy'
     ]);
-
     // Search
     Route::get('search/result', [
         'as'=>'search/result',
         'uses'=>'Api\SearchServiceController@index'
     ]);
+    //================================//================================
+    // Like //
+    // Add like
+    Route::post('add-like', [
+        'as'=>'add-like',
+        'uses'=>'Api\LikeServiceController@like'
+    ]);
+    // Unlike
+    Route::post('un-like', [
+        'as'=>'un-like',
+        'uses'=>'Api\LikeServiceController@unlike'
+    ]);
+    //================================//================================
+    // Comment //
+    // Add comment
+    Route::post('add-comment', [
+        'as'=>'add-comment',
+        'uses'=>'Api\CommentServiceController@create'
+    ]);
+    // Update comment
+    Route::post('update-comment', [
+        'as'=>'update-comment',
+        'uses'=>'Api\CommentServiceController@update'
+    ]);
+    // Delete comment
+    Route::get('delete-comment/{id}', [
+        'as'=>'delete-comment',
+        'uses'=>'Api\CommentServiceController@destroy'
+    ]);
+    //================================//================================
+    // Follow //
+    // Get follow
+    Route::post('list-followed', [
+        'as'=>'list-followed',
+        'uses'=>'Api\FollowServiceController@index'
+    ]);
+    // Add follow
+    Route::post('add-follow', [
+        'as'=>'add-follow',
+        'uses'=>'Api\FollowServiceController@create'
+    ]);
+    // Delete follow
+    Route::post('un-follow', [
+        'as'=>'un-follow',
+        'uses'=>'Api\FollowServiceController@destroy'
+    ]);
+    //================================//================================
+    // News || Post in Home page //
+    Route::post('news', [
+        'as'=>'news',
+        'uses'=>'Api\NewsServiceController@index'
+    ]);
+    Route::get('news/{id}', [
+        'as'=>'news',
+        'uses'=>'Api\NewsServiceController@show'
+    ]);
+    Route::post('my-news', [
+        'as'=>'my-news',
+        'uses'=>'Api\NewsServiceController@mynews'
+    ]);
+    Route::post('add-news', [
+        'as'=>'add-news',
+        'uses'=>'Api\NewsServiceController@create'
+    ]);
+    Route::post('edit-news/{id}', [
+        'as'=>'edit-news',
+        'uses'=>'Api\NewsServiceController@update'
+    ]);
+    Route::get('delete-news/{id}', [
+        'as'=>'delete-news',
+        'uses'=>'Api\NewsServiceController@destroy'
+    ]);
+    //================================//================================
 });
