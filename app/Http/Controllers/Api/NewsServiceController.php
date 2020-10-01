@@ -64,6 +64,11 @@ class NewsServiceController extends Controller
         for ($i = 0; $i < count($news); $i++) {
             $author = account::where('id', '=', $news[$i]->news_author)->first();
             $news[$i]->news_author = $author;
+
+            $like = like::where('id_news','=', $news[$i]->id)->get();
+            $comment = comment::where('news_id','=', $news[$i]->id)->get();
+            $news[$i]->count_like = count($like);
+            $news[$i]->count_comment = count($comment);
         }
         $result = [
             'success' => true,
@@ -262,6 +267,12 @@ class NewsServiceController extends Controller
         $news->news_logo  = explode(',', $news->news_logo);
         $author = account::where('id', '=', $news->news_author)->first();
         $news->news_author = $author;
+        
+        $like = like::where('id_post','=', $news->id)->get();
+        $comment = comment::where('post_id','=', $news->id)->get();
+        $news->count_like = count($like);
+        $news->count_comment = count($comment);
+
         $result = [
             'success' => true,
             'code' => 200,
@@ -300,6 +311,11 @@ class NewsServiceController extends Controller
         for ($i = 0; $i < count($news); $i++) {
             $author = account::where('id', '=', $news[$i]->news_author)->first();
             $news[$i]->news_author = $author;
+
+            $like = like::where('id_news','=', $news[$i]->id)->get();
+            $comment = comment::where('news_id','=', $news[$i]->id)->get();
+            $news[$i]->count_like = count($like);
+            $news[$i]->count_comment = count($comment);
         }
         $result = [
             'success' => true,

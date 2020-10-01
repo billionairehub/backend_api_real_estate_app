@@ -193,4 +193,19 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'uses'=>'Api\NewsServiceController@destroy'
     ]);
     //================================//================================
+    // Like comment
+    Route::post('like-comment', [
+        'as'=>'like-comment',
+        'uses'=>'Api\LikeCommentServiceController@index'
+    ]);
+    // Add like comment
+    Route::post('add-like-comment', [
+        'as'=>'add-like-comment',
+        'uses'=>'Api\LikeCommentServiceController@create'
+    ]);
+    // Unlike comment
+    Route::post('un-like-comment', [
+        'as'=>'un-like-comment',
+        'uses'=>'Api\LikeCommentServiceController@destroy'
+    ]);
 });

@@ -94,8 +94,8 @@ class LikeServiceController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        if (array_key_exists('post_id', $lst) || $lst['type_comment'] !== null){
-            $liked = like::where('id_post', '=' , $lst['id_post'])->where('id_account_like', '=', $userId)->first();
+        if (array_key_exists('post_id', $lst) && $lst['type_like'] !== null){
+            $liked = like::where('id_post', '=' , $lst['post_id'])->where('id_account_like', '=', $userId)->first();
             
             if ($liked) {
                 return [
@@ -111,10 +111,10 @@ class LikeServiceController extends Controller
                     'code' => 401,
                     'message' => trans('message.input_not_right')
                 ];
-            } else if ($lst['type_comment'] === 'posts') {
-                $like->id_post = $lst['id_post'];
+            } else if ($lst['type_like'] === 'posts') {
+                $like->id_post = $lst['post_id'];
             } else {
-                $like->id_news = $lst['id_post'];
+                $like->id_news = $lst['post_id'];
             }
             $like->id_account_like = $userId;
             
@@ -154,8 +154,12 @@ class LikeServiceController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        if (array_key_exists('post_id', $lst) || $lst['type_comment'] !== null){
-            $liked = like::where('id_post', '=' , $lst['id_post'])->where('id_account_like', '=', $userId)->first();
+        if (array_key_exists('post_id', $lst) && $lst['type_like'] !== null){
+            if ($lst['type_like'] === 'posts') {
+                $liked = like::where('id_post', '=' , $lst['post_id'])->where('id_account_like', '=', $userId)->first();
+            } else {
+                $liked = like::where('id_news', '=' , $lst['post_id'])->where('id_account_like', '=', $userId)->first();
+            }
             if (!$liked) {
                 return [
                     'success' => false,

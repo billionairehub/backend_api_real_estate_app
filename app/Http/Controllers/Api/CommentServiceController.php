@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Constants;
 use App\comment;
+use App\like_comment;
 
 class CommentServiceController extends Controller
 {
@@ -34,8 +35,16 @@ class CommentServiceController extends Controller
                 ];
             } else if ($lst['type_comment'] === 'posts') {
                 $comments = comment::where('post_id', '=', $lst['post_id'])->where('comment_level', '=', 1)->limit($limit)->offset($offset)->get();
+                for ($i = 0; $i < count($comments); $i++) {
+                    $like = like_comment::where('id_comment', '=', $comments[$i]->id)->get();
+                    $comments[$i]->count_like = count($like);
+                }
             } else {
                 $comments = comment::where('news_id', '=', $lst['post_id'])->where('comment_level', '=', 1)->limit($limit)->offset($offset)->get();
+                for ($i = 0; $i < count($comments); $i++) {
+                    $like = like_comment::where('id_comment', '=', $comments[$i]->id)->get();
+                    $comments[$i]->count_like = count($like);
+                }
             }
             $result = [
                 'success' => true,
@@ -76,9 +85,9 @@ class CommentServiceController extends Controller
                     'message' => trans('message.input_not_right')
                 ];
             } else if ($lst['type_comment'] === 'posts') {
-                $like->post_id = $lst['post_id'];
+                $comment->post_id = $lst['post_id'];
             } else {
-                $like->news_id = $lst['post_id'];
+                $comment->news_id = $lst['post_id'];
             }
             $comment->user_id = $userId;
             $comment->comment_content = $lst['comment_content'];
@@ -150,8 +159,16 @@ class CommentServiceController extends Controller
                 ];
             } else if ($lst['type_comment'] === 'posts') {
                 $comments = comment::where('post_id', '=', $lst['post_id'])->where('comment_level', '=', 2)->where('comment_id', '=', $lst['comment_id'])->limit($limit)->offset($offset)->get();
+                for ($i = 0; $i < count($comments); $i++) {
+                    $like = like_comment::where('id_comment', '=', $comments[$i]->id)->get();
+                    $comments[$i]->count_like = count($like);
+                }
             } else {
                 $comments = comment::where('news_id', '=', $lst['post_id'])->where('comment_level', '=', 2)->where('comment_id', '=', $lst['comment_id'])->limit($limit)->offset($offset)->get();
+                for ($i = 0; $i < count($comments); $i++) {
+                    $like = like_comment::where('id_comment', '=', $comments[$i]->id)->get();
+                    $comments[$i]->count_like = count($like);
+                }
             }
             $result = [
                 'success' => true,
@@ -247,7 +264,7 @@ class CommentServiceController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        if (array_key_exists('post_id', $lst) || $lst['type_comment'] !== null){
+        if (array_key_exists('post_id', $lst) && $lst['type_comment'] !== null){
             $comment = comment::find($id);
             if ($comment->user_id != $userId) {
                 return [

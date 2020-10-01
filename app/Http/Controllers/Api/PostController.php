@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Constants;
 use Carbon\Carbon;
 use Image;
+use App\comment;
+use App\like;
 use App\post;
 use App\account;
 
@@ -45,6 +47,10 @@ class PostController extends Controller
             $posts[$i]->post_image = explode(',', $posts[$i]->post_image);
             $author = account::find($posts[$i]->post_author);
             $posts[$i]->post_author = $author;
+            $like = like::where('id_post','=', $posts[$i]->id)->get();
+            $comment = comment::where('post_id','=', $posts[$i]->id)->get();
+            $posts[$i]->count_like = count($like);
+            $posts[$i]->count_comment = count($comment);
         }
         $result = [
             'success' => true,
@@ -167,6 +173,10 @@ class PostController extends Controller
              ];
         }
         $data[0]->post_image = explode(',', $data[0]->post_image);
+        $like = like::where('id_post','=', $data[0]->id)->get();
+        $comment = comment::where('post_id','=', $data[0]->id)->get();
+        $data[0]->count_like = count($like);
+        $data[0]->count_comment = count($comment);
         $author = account::find($data[0]->post_author);
         $data[0]->post_author = $author;
         return [
@@ -194,9 +204,14 @@ class PostController extends Controller
         if ($request['limit'] !=  null) {
             $limit = $lst['limit'];
         }
+        
         $post = post::where('post_author', '=', $userId)->limit($limit)->offset($offset)->get();
         for ($i = 0; $i < count($post); $i++) {
             $post[$i]->post_image  = explode(',', $post[$i]->post_image);
+            $like = like::where('id_post','=', $post[$i]->id)->get();
+            $comment = comment::where('post_id','=', $post[$i]->id)->get();
+            $post[$i]->count_like = count($like);
+            $post[$i]->count_comment = count($comment);
         }
         for ($i = 0; $i < count($post); $i++) {
             $author = account::where('id', '=', $post[$i]->post_author)->first();
