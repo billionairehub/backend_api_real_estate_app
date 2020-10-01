@@ -46,30 +46,60 @@ class SearchServiceController extends Controller
             ];
         }
         // District, province, lowest-price
+        if ((array_key_exists('provincials', $lst) && $lst['provincials'] != null) && (array_key_exists('district', $lst) && $lst['district'] != null) && (array_key_exists('lowest-price', $lst) && $lst['lowest-price'] != null)) {
+            $result = $result->where('news_province', 'like', '%'.$lst['provincials'].'%')->where('news_district', 'like', '%'.$lst['district'].'%')->orderBy('news_price_to')->limit($limit)->offset($offset)->get();
+        }
         // District, province, highest-price
+        else if ((array_key_exists('provincials', $lst) && $lst['provincials'] != null) && (array_key_exists('district', $lst) && $lst['district'] != null) && (array_key_exists('highest-price', $lst) && $lst['highest-price'] != null)) {
+            $result = $result->where('news_province', 'like', '%'.$lst['provincials'].'%')->where('news_district', 'like', '%'.$lst['district'].'%')->orderBy('news_price_to', 'desc')->limit($limit)->offset($offset)->get();
+        }
         // District, highest-price
+        else if ((array_key_exists('district', $lst) && $lst['district'] != null) && (array_key_exists('highest-price', $lst) && $lst['highest-price'] != null)) {
+            $result = $result->where('news_district', 'like', '%'.$lst['district'].'%')->orderBy('news_price_to', 'desc')->limit($limit)->offset($offset)->get();
+        }
         // District, lowest-price
+        else if ((array_key_exists('district', $lst) && $lst['district'] != null) && (array_key_exists('lowest-price', $lst) && $lst['lowest-price'] != null)) {
+            $result = $result->where('news_district', 'like', '%'.$lst['district'].'%')->orderBy('news_price_to')->limit($limit)->offset($offset)->get();
+        }
         // Province, highest-price
+        else if ((array_key_exists('provincials', $lst) && $lst['provincials'] != null) && (array_key_exists('highest-price', $lst) && $lst['highest-price'] != null)) {
+            $result = $result->where('news_province', 'like', '%'.$lst['provincials'].'%')->orderBy('news_price_to', 'desc')->limit($limit)->offset($offset)->get();
+        }
         // Province, lowest-price
-        // if () {}
-        // else if () {}
-        // else if () {}
-        // else {}
-        if (array_key_exists('provincials', $lst) && $lst['provincials'] != null) {
-            $result = $result->where('news_province', 'like', '%'.$lst['provincials'].'%')->limit($limit)->offset($offset)->get();
+        else if ((array_key_exists('provincials', $lst) && $lst['provincials'] != null) && (array_key_exists('lowest-price', $lst) && $lst['lowest-price'] != null)) {
+            $result = $result->where('news_province', 'like', '%'.$lst['provincials'].'%')->orderBy('news_price_to')->limit($limit)->offset($offset)->get();
         }
-        if (array_key_exists('district', $lst) && $lst['district'] != null) {
-            $result = $result->where('news_district', 'like', '%'.$lst['district'].'%')->limit($limit)->offset($offset)->get();
+        // Else 
+        else {
+            if (array_key_exists('provincials', $lst) && $lst['provincials'] != null) {
+                $result = $result->where('news_province', 'like', '%'.$lst['provincials'].'%')->limit($limit)->offset($offset)->get();
+            }
+            if (array_key_exists('district', $lst) && $lst['district'] != null) {
+                $result = $result->where('news_district', 'like', '%'.$lst['district'].'%')->limit($limit)->offset($offset)->get();
+            }
+            if (array_key_exists('lowest-price', $lst) && $lst['lowest-price'] != null) {
+                $result = $result->orderBy('news_price_to')->limit($limit)->offset($offset)->get();
+            }
+            if (array_key_exists('highest-price', $lst) && $lst['highest-price'] != null) {
+                $result = $result->orderBy('news_price_to', 'desc')->limit($limit)->offset($offset)->get();
+            }
         }
-        if (array_key_exists('lowest-price', $lst) && $lst['lowest-price'] != null) {
-            $result = $result->orderBy('news_price_to')->limit($limit)->offset($offset)->get();
+        if (count($lst) == 0) {
+            $result = news::orderBy('created_at', 'desc')->limit($limit)->offset($offset)->get();
         }
-        if (array_key_exists('highest-price', $lst) && $lst['highest-price'] != null) {
-            $result = $result->orderBy('news_price_to', 'desc')->limit($limit)->offset($offset)->get();
+        for ($i = 0; $i < count($result); $i++) {
+            $result[$i]->news_feature_image  = explode(',', $result[$i]->news_feature_image);
         }
-        // $result = news::where()->limit($limit)->offset($offset)->get();
-        // $result = 'select * from news where ' . $query;
-        dd($result);
+        for ($i = 0; $i < count($result); $i++) {
+            $result[$i]->news_image  = explode(',', $result[$i]->news_image);
+        }
+        for ($i = 0; $i < count($result); $i++) {
+            $result[$i]->news_logo  = explode(',', $result[$i]->news_logo);
+        }
+        for ($i = 0; $i < count($result); $i++) {
+            $author = account::where('id', '=', $result[$i]->news_author)->first();
+            $result[$i]->news_author = $author;
+        }
         return [
             'success' => true,
             'code' => 200,

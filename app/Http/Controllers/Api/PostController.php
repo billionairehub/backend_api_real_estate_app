@@ -70,7 +70,7 @@ class PostController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        if (array_key_exists('post_content', $lst) && array_key_exists('post_image', $lst) && $lst['post_content'] != null && $lst['post_image'] != null) {
+        if (array_key_exists('post_content', $lst) && $lst['post_content'] != null) {
             $lst = $request->all();
             $post = new post;
             $post->post_author = $userId;

@@ -17,7 +17,7 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->bigInteger('post_author');
             $table->longText('post_content');
-            $table->longText('post_image');
+            $table->longText('post_image')->nullable();
             $table->string('post_status', 20);
             $table->tinyInteger('post_comment_status');
             $table->timestamps();
