@@ -1,6 +1,6 @@
 <?php
 return [
-    'unauthenticate' => 'You have dose not permission!',
+    'unauthenticate' => 'Bạn chưa có quyền để thực hiện thành động này!',
     'success' => 'Thành công!',
     'status_fail' => 'Lấy danh sách thất bại!',
     'status_pass' => 'Lấy danh sách thành công!',
