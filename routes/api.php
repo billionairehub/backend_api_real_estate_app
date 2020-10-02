@@ -197,4 +197,9 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'un-like-comment',
         'uses'=>'Api\LikeCommentServiceController@destroy'
     ]);
+    // Search
+    Route::get('search/result', [
+        'as'=>'search/result',
+        'uses'=>'Api\SearchServiceController@index'
+    ]);
 });
