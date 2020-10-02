@@ -16,5 +16,6 @@ class Constants
 
     CONST LIMIT = 15;
     CONST OFFSET = 0;
+    CONST LIMIT_NEWS = 6;
     // --------------------------------------------------------//
 }

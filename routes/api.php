@@ -202,4 +202,11 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'search/result',
         'uses'=>'Api\SearchServiceController@index'
     ]);
+        //get-news
+    Route::get('get-news', [
+        'as'=>'get-news',
+        'uses'=>'Api\NewsCrawlerController@index'
+    ]);
 });
+
+
