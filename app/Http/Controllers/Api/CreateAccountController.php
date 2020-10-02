@@ -180,7 +180,7 @@ class CreateAccountController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        $listdata = account::find($id);
+        $listdata = account::find($userId);
         if(!$listdata) {
           return $result = [
                   'success' => false,
@@ -190,11 +190,21 @@ class CreateAccountController extends Controller
             ];
         }
 
-        $listdata->personal_infor = $request->input('personal_infor');
-        $listdata->id_token_faceboook = $request->input('id_token_faceboook'); 
-        $listdata->id_token_google = $request->input('id_token_google'); 
-        $listdata->birth_date = Carbon::parse($request->input('birth_date'))->format('Y.m.d'); 
-        $listdata->passwords = Hash::make($request->passwords);
+        if (array_key_exists('personal_infor', $lst)) {
+            $listdata->personal_infor = $request->input('personal_infor');
+        }
+        if (array_key_exists('id_token_faceboook', $lst)) {
+            $listdata->id_token_faceboook = $request->input('id_token_faceboook'); 
+        }
+        if (array_key_exists('id_token_google', $lst)) {
+            $listdata->id_token_google = $request->input('id_token_google'); 
+        }
+        if (array_key_exists('birth_date', $lst)) {
+            $listdata->birth_date = Carbon::parse($request->input('birth_date'))->format('Y.m.d'); 
+        }
+        if (array_key_exists('passwords', $lst)) {
+            $listdata->passwords = Hash::make($request->passwords);
+        }
 
         $lst = $request->all();
         $result = [

@@ -64,7 +64,7 @@ class LoginController extends Controller
                 'message' => trans('message.unauthenticate')
           ];
         }
-        $list = album::where('id_account',$id)->get();
+        $list = album::where('id_account',$userId)->get();
         if(count($list) == null){
             $result = [
                 'success' => false,

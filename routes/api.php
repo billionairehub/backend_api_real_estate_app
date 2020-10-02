@@ -57,7 +57,7 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'list-account',
         'uses'=> 'Api\CreateAccountController@edit'
     ]);
-    Route::post('update-account/{id}',[
+    Route::post('update-account',[
         'as'=>'update-account',
         'uses'=> 'Api\CreateAccountController@update'
     ]);
@@ -132,5 +132,64 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
     Route::get('delete-comment/{id}', [
         'as'=>'delete-comment',
         'uses'=>'Api\CommentServiceController@destroy'
+    ]);
+    //================================//================================
+    // Follow //
+    // Get follow
+    Route::post('list-followed', [
+        'as'=>'list-followed',
+        'uses'=>'Api\FollowServiceController@index'
+    ]);
+    // Add follow
+    Route::post('add-follow', [
+        'as'=>'add-follow',
+        'uses'=>'Api\FollowServiceController@create'
+    ]);
+    // Delete follow
+    Route::post('un-follow', [
+        'as'=>'un-follow',
+        'uses'=>'Api\FollowServiceController@destroy'
+    ]);
+    //================================//================================
+    // News || Post in Home page //
+    Route::post('news', [
+        'as'=>'news',
+        'uses'=>'Api\NewsServiceController@index'
+    ]);
+    Route::get('news/{id}', [
+        'as'=>'news',
+        'uses'=>'Api\NewsServiceController@show'
+    ]);
+    Route::post('my-news', [
+        'as'=>'my-news',
+        'uses'=>'Api\NewsServiceController@mynews'
+    ]);
+    Route::post('add-news', [
+        'as'=>'add-news',
+        'uses'=>'Api\NewsServiceController@create'
+    ]);
+    Route::post('edit-news/{id}', [
+        'as'=>'edit-news',
+        'uses'=>'Api\NewsServiceController@update'
+    ]);
+    Route::get('delete-news/{id}', [
+        'as'=>'delete-news',
+        'uses'=>'Api\NewsServiceController@destroy'
+    ]);
+    //================================//================================
+    // Like comment
+    Route::post('like-comment', [
+        'as'=>'like-comment',
+        'uses'=>'Api\LikeCommentServiceController@index'
+    ]);
+    // Add like comment
+    Route::post('add-like-comment', [
+        'as'=>'add-like-comment',
+        'uses'=>'Api\LikeCommentServiceController@create'
+    ]);
+    // Unlike comment 
+    Route::post('un-like-comment', [
+        'as'=>'un-like-comment',
+        'uses'=>'Api\LikeCommentServiceController@destroy'
     ]);
 });
