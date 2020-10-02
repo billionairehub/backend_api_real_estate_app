@@ -90,6 +90,11 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'comment',
         'uses'=>'Api\CommentServiceController@show'
     ]);
+    
+    Route::post('my-post', [
+        'as'=>'my-post',
+        'uses'=>'Api\PostController@mypost'
+    ]);
     // Post //
     //create post
     Route::post('create-post', [
