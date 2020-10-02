@@ -21,7 +21,7 @@ class CreateNewsTable extends Migration
             $table->longText('content');
             $table->longText('url_img');
             $table->string('post_date');
-            $table->string('news_relate');
+            $table->string('news_relate')->nullable();
             $table->longText('title_website');
             $table->longText('description');
             $table->string('keyword');

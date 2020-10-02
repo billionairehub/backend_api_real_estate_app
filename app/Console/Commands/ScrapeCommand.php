@@ -41,5 +41,6 @@ class ScrapeCommand extends Command
     {
         $bot = new \App\Scraper\Cafef();
         $bot->scrape();
+        //$bot->scrape_news_relate();
     }
 }
