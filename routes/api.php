@@ -18,38 +18,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
  
-Route::get('list-account',[
+Route::post('list-account',[
     'as'=>'list-account',
-    'uses'=> 'Api\CreateAccountController@index'
-]);
-Route::post('create-account',[
-    'as'=>'create-account',
     'uses'=> 'Api\CreateAccountController@store'
-]);
-Route::get('list-account/{id}',[
-    'as'=>'list-account',
-    'uses'=> 'Api\CreateAccountController@edit'
-]);
-Route::post('update-account/{id}',[
-    'as'=>'update-account',
-    'uses'=> 'Api\CreateAccountController@update'
 ]);
 
 Route::post('login-account',[
 	'as'=>'login-account',
     'uses'=> 'Api\LoginController@login'
 ]);
-
-Route::get('logout-account',[
-    'as'=>'logout-account',
-    'uses'=> 'Api\LoginController@logout'
-]);
-
-Route::get('list-album/{id}',[
-    'as'=>'list-album',
-    'uses'=> 'Api\LoginController@getAlbum'
-]);
-
 
 // Send mail
 Route::post('send-code',[
@@ -67,65 +44,68 @@ Route::post('change-password', [
     'uses'=>'Api\MailServiceController@changePassword'
 ]);
 
-// Get post
-Route::post('post', [
-    'as'=>'post',
-    'uses'=>'Api\PostController@index'
-]);
-// Get a Post
-Route::get('post/{id}', [
-    'as'=>'post',
-    'uses'=>'Api\PostController@show'
-]);
-// Get comments
-Route::post('comment', [
-    'as'=>'comment',
-    'uses'=>'Api\CommentServiceController@index'
-]);
-// Get reply comments
-Route::post('recomment', [
-    'as'=>'comment',
-    'uses'=>'Api\CommentServiceController@show'
-]);
-//Get list like
-Route::post('list-like', [
-    'as'=>'list-like',
-    'uses'=>'Api\LikeServiceController@index'
-]);
-
 Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
    Route::get('get-info-account',[
     'as'=>'get-info-account',
     'uses'=> 'Api\LoginController@getInfo'
     ]);
-    //================================//================================
-    // Post
+    Route::get('list-account',[
+        'as'=>'list-account',
+        'uses'=> 'Api\CreateAccountController@index'
+    ]);
+    Route::get('list-account/{id}',[
+        'as'=>'list-account',
+        'uses'=> 'Api\CreateAccountController@edit'
+    ]);
+    Route::post('update-account/{id}',[
+        'as'=>'update-account',
+        'uses'=> 'Api\CreateAccountController@update'
+    ]);
+    Route::get('logout-account',[
+        'as'=>'logout-account',
+        'uses'=> 'Api\LoginController@logout'
+    ]);
+    
+    Route::get('list-album/{id}',[
+        'as'=>'list-album',
+        'uses'=> 'Api\LoginController@getAlbum'
+    ]);
+    // Get post
+    Route::get('post', [
+        'as'=>'post',
+        'uses'=>'Api\PostController@index'
+    ]);
+    // Get a Post
+    Route::get('post/{id}', [
+        'as'=>'post',
+        'uses'=>'Api\PostController@show'
+    ]);
+    // Get comments
+    Route::post('comment', [
+        'as'=>'comment',
+        'uses'=>'Api\CommentServiceController@index'
+    ]);
+    // Get reply comments
+    Route::post('recomment', [
+        'as'=>'comment',
+        'uses'=>'Api\CommentServiceController@show'
+    ]);
+    // Post //
     //create post
     Route::post('create-post', [
         'as'=>'create-post',
         'uses'=>'Api\PostController@create'
-    ]);
-    //Get my post
-    Route::post('my-post', [
-        'as'=>'my-post',
-        'uses'=>'Api\PostController@mypost'
     ]);
     //Update post
     Route::post('update-post/{id}', [
         'as'=>'update-post',
         'uses'=>'Api\PostController@update'
     ]);
-    // Delete post
+    //Delete post
     Route::post('delete-post/{id}', [
         'as'=>'delete-post',
         'uses'=>'Api\PostController@destroy'
     ]);
-    // Search
-    Route::get('search/result', [
-        'as'=>'search/result',
-        'uses'=>'Api\SearchServiceController@index'
-    ]);
-    //================================//================================
     // Like //
     // Add like
     Route::post('add-like', [
@@ -137,7 +117,6 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
         'as'=>'un-like',
         'uses'=>'Api\LikeServiceController@unlike'
     ]);
-    //================================//================================
     // Comment //
     // Add comment
     Route::post('add-comment', [
@@ -153,64 +132,5 @@ Route::middleware(['assign.guard:api','jwt.auth'])->group(function(){
     Route::get('delete-comment/{id}', [
         'as'=>'delete-comment',
         'uses'=>'Api\CommentServiceController@destroy'
-    ]);
-    //================================//================================
-    // Follow //
-    // Get follow
-    Route::post('list-followed', [
-        'as'=>'list-followed',
-        'uses'=>'Api\FollowServiceController@index'
-    ]);
-    // Add follow
-    Route::post('add-follow', [
-        'as'=>'add-follow',
-        'uses'=>'Api\FollowServiceController@create'
-    ]);
-    // Delete follow
-    Route::post('un-follow', [
-        'as'=>'un-follow',
-        'uses'=>'Api\FollowServiceController@destroy'
-    ]);
-    //================================//================================
-    // News || Post in Home page //
-    Route::post('news', [
-        'as'=>'news',
-        'uses'=>'Api\NewsServiceController@index'
-    ]);
-    Route::get('news/{id}', [
-        'as'=>'news',
-        'uses'=>'Api\NewsServiceController@show'
-    ]);
-    Route::post('my-news', [
-        'as'=>'my-news',
-        'uses'=>'Api\NewsServiceController@mynews'
-    ]);
-    Route::post('add-news', [
-        'as'=>'add-news',
-        'uses'=>'Api\NewsServiceController@create'
-    ]);
-    Route::post('edit-news/{id}', [
-        'as'=>'edit-news',
-        'uses'=>'Api\NewsServiceController@update'
-    ]);
-    Route::get('delete-news/{id}', [
-        'as'=>'delete-news',
-        'uses'=>'Api\NewsServiceController@destroy'
-    ]);
-    //================================//================================
-    // Like comment
-    Route::post('like-comment', [
-        'as'=>'like-comment',
-        'uses'=>'Api\LikeCommentServiceController@index'
-    ]);
-    // Add like comment
-    Route::post('add-like-comment', [
-        'as'=>'add-like-comment',
-        'uses'=>'Api\LikeCommentServiceController@create'
-    ]);
-    // Unlike comment
-    Route::post('un-like-comment', [
-        'as'=>'un-like-comment',
-        'uses'=>'Api\LikeCommentServiceController@destroy'
     ]);
 });

@@ -18,6 +18,14 @@ class LikeServiceController extends Controller
      */
     public function index(Request $request)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $lst = $request->all();
         if (array_key_exists('post_id', $lst) && $lst['post_id'] != null) {
             $offset = Constants::OFFSET;

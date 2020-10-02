@@ -22,6 +22,14 @@ class CreateAccountController extends Controller
      */
     public function index()
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $list = account::all();
         if(count($list)){
             $result = [
@@ -126,6 +134,14 @@ class CreateAccountController extends Controller
 
     public function edit($id)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $list = account::find($id);
         
         if($list == null){
@@ -156,6 +172,14 @@ class CreateAccountController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $listdata = account::find($id);
         if(!$listdata) {
           return $result = [

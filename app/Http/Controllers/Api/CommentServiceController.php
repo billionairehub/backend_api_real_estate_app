@@ -19,8 +19,16 @@ class CommentServiceController extends Controller
      */
     public function index(Request $request)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $lst = $request->all();
-        if (array_key_exists('post_id', $lst) || $lst['type_comment'] !== null){
+        if (array_key_exists('post_id', $lst) && $lst['type_comment'] !== null){
             $offset = Constants::OFFSET;
             $limit = Constants::LIMIT;
             if ($request['offset'] != null) {
@@ -151,6 +159,14 @@ class CommentServiceController extends Controller
      */
     public function show(Request $request)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $lst = $request->all();
         if (array_key_exists('post_id', $lst) || $lst['type_comment'] !== null){
             $offset = Constants::OFFSET;

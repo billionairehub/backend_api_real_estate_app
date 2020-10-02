@@ -33,6 +33,14 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $lst = $request->all();
         $offset = Constants::OFFSET;
         $limit = Constants::LIMIT;
@@ -164,6 +172,14 @@ class PostController extends Controller
      */
     public function show($id)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $data = post::where('id', $id)->get();
         if (count($data) == 0) {
              return [

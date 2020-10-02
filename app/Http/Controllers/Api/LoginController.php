@@ -38,6 +38,14 @@ class LoginController extends Controller
 
     public function getInfo()
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         return response()->json([
             'status' => true,
             'code' => 200,
@@ -48,6 +56,14 @@ class LoginController extends Controller
 
     public function getAlbum($id)
     {
+        $userId = auth('api')->user()->id;
+        if (!$userId) {
+            return  [
+                'success' => false,
+                'code' => 401,
+                'message' => trans('message.unauthenticate')
+          ];
+        }
         $list = album::where('id_account',$id)->get();
         if(count($list) == null){
             $result = [
